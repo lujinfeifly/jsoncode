@@ -1,5 +1,15 @@
+
+MAVEN引用：
+
 <dependency>
   <groupId>cn.miludeer</groupId>
   <artifactId>jsoncode</artifactId>
   <version>1.0</version>
 </dependency>
+
+
+项目的解决问题：很多解析json的包都是解析全部的json语句的信息，在使用或是解析程度上都比较大。在性能或是方便性上不是很好用。
+我们的要解决的是，如果需要从json中获取简单的一个或多个内容，可以很方便的让用户使用。
+
+比如我们下面的例子
+
