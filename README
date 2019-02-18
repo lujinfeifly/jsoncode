@@ -1,0 +1,5 @@
+<dependency>
+  <groupId>cn.miludeer</groupId>
+  <artifactId>jsoncode</artifactId>
+  <version>1.0</version>
+</dependency>
