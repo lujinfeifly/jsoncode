@@ -42,6 +42,10 @@ public class JsonCode {
         return jsonStr.substring(a,b);
     }
 
+    public static String[] getValueList(String jsonStr, String expression) {
+        return null;
+    }
+
     private static IndexResult anylise(String jsonStr, int beginId, int endId, String key){
         if(jsonStr.charAt(beginId) != '{') {
             return null;
@@ -97,21 +101,62 @@ public class JsonCode {
             }
 
             if(!enterKey && isMatch) {   // 到了value，且是内容，且是匹配上的
-                if(temp == '"') { // 值是string
+                if (temp == '"') { // 值是string
                     i++;
                     result.a = i;
-                    temp = jsonStr.charAt(i) ;
-                    while(temp != '"') {
+                    temp = jsonStr.charAt(i);
+                    while (temp != '"') {
                         i++;
                         temp = jsonStr.charAt(i);
-                        if(temp == '\\') {
-                            i+=2;
+                        if (temp == '\\') {
+                            i += 2;
                             temp = jsonStr.charAt(i);
                         }
                     }
                     result.b = i;
                     return result;
-                }else{  // 值里面可能是int或还是一个json
+                } else if(temp == '[') {  // 数组的方式。
+                    result.a = i;
+                    i++;
+                    boolean isCintent2 = false;
+                    temp = jsonStr.charAt(i);
+                    int floor = 0;
+                    floor++;
+cycle2:             while(true) {
+                        if(isCintent2) {
+                            switch (temp) {
+                                case '\\':
+                                    i++;
+                                    break;
+                                case '"':
+                                    isCintent2 = false;
+                                    break;
+                            }
+                        } else {
+                            switch (temp) {
+                                case '[':
+                                    floor ++;
+                                    break;
+                                case ']':
+                                    floor--;
+                                    if(floor == 0) {
+                                        result.b = i+1;
+                                        break cycle2;
+                                    }
+                                    break;
+                                case '"':
+                                    isCintent2 = !isCintent2;
+                                    break;
+                                case '\\':
+                                    i++; // 跳过下一个
+                                    break;
+                            }
+                        }
+                        i++;
+                        temp = jsonStr.charAt(i);
+                    }
+                    return result;
+                } else{  // 值里面可能是int或还是一个json
                     result.a = i;
                     int floor = 0;
                     boolean isCintent2 = false;
