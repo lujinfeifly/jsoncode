@@ -15,7 +15,7 @@ import org.junit.Test;
 public class JsonCodeTest {
 
     @Test
-    public void test() {
+    public void testList() {
 
         String json = "{\"ss\":{\"sss\":\"vvvvv\",\"fg\":{\"f\":\"ererer\",\"list\":[1,eeee,{\"\\[\"}]}}}";
 
@@ -23,5 +23,17 @@ public class JsonCodeTest {
 
         System.out.println(code);
     }
+
+    @Test
+    public void testkey() {
+
+        String json = "{\"ss\":{\"sss\":\"vvvvv\",\"fg\":{\"f\":\"ererer\",\"list\":[1,eeee,{\"\\[\"}]}}}";
+
+        String code = JsonCode.getValue(json,"*.ss.fg.f");
+
+        System.out.println(code);
+    }
+
+
 
 }

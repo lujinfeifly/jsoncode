@@ -43,6 +43,13 @@ public class JsonCode {
     }
 
     public static String[] getValueList(String jsonStr, String expression) {
+        String dis = getValue(jsonStr, expression);
+        if(dis == null || dis.length()<1 || dis.charAt(0) != '[') {
+            return null;
+        }
+
+        // 拆解list（list 有中括号包裹）todo
+
         return null;
     }
 
