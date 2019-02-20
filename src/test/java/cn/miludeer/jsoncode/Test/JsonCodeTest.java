@@ -34,6 +34,16 @@ public class JsonCodeTest {
         System.out.println(code);
     }
 
+    @Test
+    public void testListArray() {
 
+        String json = "{\"ss\":{\"sss\":\"vvvvv\",\"fg\":{\"f\":\"ererer\",\"list\":[1,eeee,{\"\\[\"}]}}}";
+
+        String[] code = JsonCode.getValueList(json,"*.ss.fg.list");
+
+        for(int i = 0;i<code.length; i++) {
+            System.out.println(i + ":" + code[i]);
+        }
+    }
 
 }

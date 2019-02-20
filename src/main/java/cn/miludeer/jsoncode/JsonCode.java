@@ -2,6 +2,9 @@ package cn.miludeer.jsoncode;
 
 import cn.miludeer.jsoncode.element.IndexResult;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * program: jsoncode
  * description: 操作方法入口类，这里面是所有调用的方法的集合地。
@@ -48,9 +51,69 @@ public class JsonCode {
             return null;
         }
 
-        // 拆解list（list 有中括号包裹）todo
+        return cutForList(dis);
+    }
 
-        return null;
+
+    private static String[] cutForList(String json) {
+        List<String> list = new ArrayList<String>();
+
+        int i = 1;
+        boolean isContent2 = false;  // 引号包含的内容
+        char temp = json.charAt(i);
+        int floor = 0;
+
+        IndexResult result = new IndexResult();
+        result.a = i;
+
+        while(true) {
+            if(isContent2) {
+                switch (temp) {
+                    case '\\':
+                        i++;
+                        break;
+                    case '"':
+                        isContent2 = false;
+                        break;
+                }
+            } else {
+                switch (temp) {
+                    case '"': // 如果遇到这种情况就说明有字符串
+                        isContent2 = !isContent2;
+                        break;
+                    case ',':
+                    case ']':
+                        if(floor == 0) {
+                            result.b = i;
+                            list.add(json.substring(result.a, result.b));
+                            result.a = i+1;
+                        }
+                        break;
+                    case '{':
+                        floor++;
+                        break;
+                    case '}':
+                        floor--;
+                        break;
+                }
+            }
+            i++;
+
+            if(i== json.length()) {
+                break;
+            }
+            temp = json.charAt(i);
+        }
+
+        String[] ret = new String[list.size()];
+
+        int index = 0;
+        for(String a : list) {
+            ret[index] = a;
+            index++;
+        }
+
+        return ret;
     }
 
     private static IndexResult anylise(String jsonStr, int beginId, int endId, String key){
