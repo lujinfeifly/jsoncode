@@ -18,7 +18,7 @@ public class JsonCodeTest {
 
         String json = "{\"ss\":{\"sss\":\"vvvvv\",\"fg\":{\"f\":\"ererer\",\"list\":[1,eeee,{\"\\[\"}]}}}";
 
-        String code = JsonCode.getValue(json,"*.ss.fg.f");
+        String code = JsonCode.getValue(json,"$.ss.fg.f");
 
         System.out.println(code);
     }
@@ -28,7 +28,7 @@ public class JsonCodeTest {
 
         String json = "{\"ss\":{\"sss\":\"vvvvv\",\"fg\":{\"f\":\"ererer\",\"list\":[1,eeee,{\"\\[\"}]}}}";
 
-        String code = JsonCode.getValue(json,"*.ss.fg.list");
+        String code = JsonCode.getValue(json,"$.ss.fg.list");
 
         System.out.println(code);
     }
@@ -38,7 +38,7 @@ public class JsonCodeTest {
 
         String json = "{\"ss\":{\"sss\":\"vvvvv\",\"fg\":{\"f\":\"ererer\",\"list\":[1,eeee,{\"\\[\"}]}}}";
 
-        String[] code = JsonCode.getValueList(json,"*.ss.fg.list");
+        String[] code = JsonCode.getValueList(json,"$.ss.fg.list");
 
         for(int i = 0;i<code.length; i++) {
             System.out.println(i + ":" + code[i]);

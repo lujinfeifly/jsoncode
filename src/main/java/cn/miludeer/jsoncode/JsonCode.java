@@ -21,12 +21,12 @@ public class JsonCode {
      */
     public static String getValue(String jsonStr, String expression) {
         if(jsonStr == null || jsonStr.length() == 0 ||
-                expression == null || expression.length() == 0 || expression.charAt(0) != '*') {
+                expression == null || expression.length() == 0 || expression.charAt(0) != '$') {
             return null;
         }
 
         String[] list = expression.split("\\.");
-        if(!list[0].equals("*")) {
+        if(!list[0].equals("$")) {
             return null;
         }
 
