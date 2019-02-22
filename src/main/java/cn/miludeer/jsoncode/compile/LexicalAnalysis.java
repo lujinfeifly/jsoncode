@@ -17,7 +17,7 @@ public class LexicalAnalysis {
      * @param line
      */
 
-    public static String[] key = {"size","find"};
+    public static String[] key = {"size"};
 
     public static int keyLen = 2;
 

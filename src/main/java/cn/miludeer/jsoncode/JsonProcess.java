@@ -2,11 +2,13 @@ package cn.miludeer.jsoncode;
 
 import cn.miludeer.jsoncode.compile.LexicalAnalysis;
 import cn.miludeer.jsoncode.compile.LexicalItem;
+import cn.miludeer.jsoncode.compile.UnitCalc;
 import cn.miludeer.jsoncode.element.IndexResult;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * program: jsoncode
@@ -18,7 +20,74 @@ public class JsonProcess {
 
     public static String calExpression(String json, String expression) {
         LinkedList<LexicalItem> list = LexicalAnalysis.parse(expression);
-        // todo 依次处理元素
+        // todo 依次处理元素 字符常数的码为1，数字常数数为2，保留字为3，运算符为4，界符为5，json路径为6
+
+        Stack<LexicalItem> stack = new Stack<LexicalItem>();
+
+        int size = list.size();
+        for(int i= 0 ; i< size; i++) {
+            LexicalItem item = list.get(i);
+            switch (item.type) {
+                case 1:
+                    stack.push(item);
+                    break;
+                case 2:
+                    stack.push(item);
+                    break;
+                case 3:                // 函数的使用
+                    stack.push(item);
+                    break;
+                case 4:
+                    stack.push(item);
+                    break;
+                case 5:  // 目前认为只有（）
+                    List<LexicalItem> param = new ArrayList<LexicalItem>();
+                    if(item.cm.charAt(0) == ')') {
+                        LexicalItem item2 = stack.pop();
+                        if(item.type == 1) {
+                            LexicalItem item3 = stack.pop();
+                            if(item3.cm.charAt(0) == '(') { // 优先级的括号
+                                param.add(item2);
+                            } else if(item3.cm.charAt(0) == ',') {
+                                LexicalItem item4 = stack.pop();
+                                LexicalItem item5 = stack.pop();
+                                param.add(item4);
+                                while (item4 != null && (item4.type == 1 || item4.type == 2)
+                                        && item5.cm.charAt(0) == ',') {
+                                    item4 = stack.pop();
+                                    item5 = stack.pop();
+                                    param.add(item4);
+                                }
+
+                            }
+                            LexicalItem item6 = stack.pop();
+                            if(item6 != null && item6.type==3) { // 准备调用函数
+                                String bb = UnitCalc.doProcedure(json, item6.cm, param);
+                                stack.push(new LexicalItem(1, bb));
+                            } else {
+                                stack.push(item6);
+                                stack.push(param.get(0));
+                            }
+                        }
+                    }
+                    break;
+                case 6:
+                    String value = JsonCode.getValue(json, item.cm);
+                    if(stack.empty()) {
+                        stack.push(new LexicalItem(1, value));
+                    } else {
+                        LexicalItem item2 = stack.pop();
+                        if(item2.type == 4) {
+                            LexicalItem item3 = stack.pop();
+                            String temp = UnitCalc.TwoCompare(item3.cm, value, item2.cm);
+                            stack.push(new LexicalItem(1, temp));
+                        } else {
+
+                        }
+                    }
+                    break;
+            }
+        }
 
         return  null;
     }
