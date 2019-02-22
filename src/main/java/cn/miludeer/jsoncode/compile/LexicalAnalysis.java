@@ -83,9 +83,10 @@ public class LexicalAnalysis {
                     ret.addLast(item);
                 } else if(line.charAt(i) == '$') { // json
                     begin = i;
-                    while (isDigit(line.charAt(i))
+                    i++;
+                    while (i < len && (isDigit(line.charAt(i))
                             || isLetter(line.charAt(i))
-                            || line.charAt(i) == '.') {
+                            || line.charAt(i) == '.')) {
                         i++;
                     }
                     end = i;

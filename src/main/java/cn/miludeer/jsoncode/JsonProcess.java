@@ -89,7 +89,12 @@ public class JsonProcess {
             }
         }
 
-        return  null;
+        LexicalItem item2 = stack.pop();
+        if(item2 != null) {
+            return item2.cm;
+        }else {
+            return "null";
+        }
     }
 
     public static String[] cutForList(String json) {

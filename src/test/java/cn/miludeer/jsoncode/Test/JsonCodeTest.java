@@ -45,4 +45,13 @@ public class JsonCodeTest {
         }
     }
 
+    @Test
+    public void testListRegular() {
+        String json = "{\"ss\":{\"sss\":\"vvvvv\",\"fg\":{\"f\":\"ererer\",\"list\":[1,eeee,{\"\\[\"}]}}}";
+
+        String code = JsonCode.calExpressionResult(json,"$.ss.fg.list");
+
+        System.out.println(code);
+    }
+
 }

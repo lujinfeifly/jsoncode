@@ -66,7 +66,7 @@ public class JsonCode {
      * @param expression 指定表达式
      * @return 计算的结果
      */
-    public String calExpressionResult(String jsonStr, String expression) {
+    public static String calExpressionResult(String jsonStr, String expression) {
         if(jsonStr == null || expression == null) {
             return null;
         }
