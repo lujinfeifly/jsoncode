@@ -17,19 +17,15 @@ public class LexicalAnalysis {
      * @param line
      */
 
-    String[] key = {"size","find"};
+    public static String[] key = {"size","find"};
 
-    int keyLen = 2;
+    public static int keyLen = 2;
 
-    public LinkedList<LexicalItem> parse(String line) {
+    public static LinkedList<LexicalItem> parse(String line) {
 
         LinkedList<LexicalItem> ret = new LinkedList<LexicalItem>();
         int len = line.length();
         for(int i=0;i<len;i++) {
-            int j = 0;  //letter  标识符
-            int l = 0;   //digit  常数
-            int k = 0;   //operators  运算符
-
             int b = 0;   // 类型编号
             int begin = 0, end = 0;
             String temp;

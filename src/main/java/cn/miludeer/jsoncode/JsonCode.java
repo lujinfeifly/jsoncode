@@ -2,8 +2,7 @@ package cn.miludeer.jsoncode;
 
 import cn.miludeer.jsoncode.element.IndexResult;
 
-import static cn.miludeer.jsoncode.JsonProcess.anylise;
-import static cn.miludeer.jsoncode.JsonProcess.cutForList;
+import static cn.miludeer.jsoncode.JsonProcess.*;
 
 /**
  * program: jsoncode
@@ -72,7 +71,7 @@ public class JsonCode {
             return null;
         }
 
-        return null;
+        return calExpression(jsonStr, expression);
     }
 
 }

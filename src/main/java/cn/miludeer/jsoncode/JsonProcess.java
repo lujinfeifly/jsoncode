@@ -1,20 +1,27 @@
 package cn.miludeer.jsoncode;
 
+import cn.miludeer.jsoncode.compile.LexicalAnalysis;
+import cn.miludeer.jsoncode.compile.LexicalItem;
 import cn.miludeer.jsoncode.element.IndexResult;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
  * program: jsoncode
- * <p>
  * description: ${description}
- * <p>
  * author: lujinfei
- * <p>
  * create: 2019-02-20 13:14
  **/
 public class JsonProcess {
+
+    public static String calExpression(String json, String expression) {
+        LinkedList<LexicalItem> list = LexicalAnalysis.parse(expression);
+        // todo 依次处理元素
+
+        return  null;
+    }
 
     public static String[] cutForList(String json) {
         List<String> list = new ArrayList<String>();
@@ -236,4 +243,6 @@ public class JsonProcess {
         }
         return result;
     }
+
+
 }
