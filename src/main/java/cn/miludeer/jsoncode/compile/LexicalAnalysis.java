@@ -61,7 +61,7 @@ public class LexicalAnalysis {
                     // todo加入
                 } else if (isDigit(line.charAt(i))) {
                     begin = i;
-                    while (isDigit(line.charAt(i))){
+                    while (i<len && isDigit(line.charAt(i))){
                         i++;
                     }
                     end = i;
@@ -77,11 +77,10 @@ public class LexicalAnalysis {
                     LexicalItem item;
                     if ((line.charAt(i) == '>' || line.charAt(i) == '<') && line.charAt(i+1) == '=') {
                         item = new LexicalItem(4, line.substring(i, i+2));
-                        i += 2;
+                        i += 1;
                     }
                     else{
                         item = new LexicalItem(4, line.substring(i, i+1));
-                        i+= 1;
                     }
                     ret.addLast(item);
                 } else if(line.charAt(i) == '$') { // json

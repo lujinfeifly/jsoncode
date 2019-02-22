@@ -28,12 +28,6 @@ public class JsonProcess {
         for(int i= 0 ; i< size; i++) {
             LexicalItem item = list.get(i);
             switch (item.type) {
-                case 1:
-                    stack.push(item);
-                    break;
-                case 2:
-                    stack.push(item);
-                    break;
                 case 3:                // 函数的使用
                     stack.push(item);
                     break;
@@ -73,19 +67,27 @@ public class JsonProcess {
                         stack.push(item);
                     }
                     break;
+                case 1:
+                case 2:
                 case 6:
-                    String value = JsonCode.getValue(json, item.cm);
+                    LexicalItem th;
+                    if(item.type == 6) {
+                        String value = JsonCode.getValue(json, item.cm);
+                        th = new LexicalItem(1, value);
+                    } else {
+                        th = item;
+                    }
                     if(stack.empty()) {
-                        stack.push(new LexicalItem(1, value));
+                        stack.push(th);
                     } else {
                         LexicalItem item2 = stack.pop();
                         if(item2.type == 4) {
                             LexicalItem item3 = stack.pop();
-                            String temp = UnitCalc.TwoCompare(item3.cm, value, item2.cm);
+                            String temp = UnitCalc.TwoCompare(item3.cm, th.cm, item2.cm);
                             stack.push(new LexicalItem(1, temp));
                         } else {
                             stack.push(item2);
-                            stack.push(new LexicalItem(1, value));
+                            stack.push(new LexicalItem(1, th.cm));
                         }
                     }
                     break;
