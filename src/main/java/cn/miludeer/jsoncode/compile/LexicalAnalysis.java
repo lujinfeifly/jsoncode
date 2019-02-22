@@ -19,7 +19,7 @@ public class LexicalAnalysis {
 
     public static String[] key = {"size"};
 
-    public static int keyLen = 2;
+    public static int keyLen = 1;
 
     public static LinkedList<LexicalItem> parse(String line) {
 
@@ -50,12 +50,14 @@ public class LexicalAnalysis {
                             b = 3;
                             break;
                         }
+                        a++;
                     }
 
                     b = 1;
 
                     LexicalItem item = new LexicalItem(b, temp);
                     ret.addLast(item);
+                    i--;
                     // todo加入
                 } else if (isDigit(line.charAt(i))) {
                     begin = i;
@@ -67,9 +69,10 @@ public class LexicalAnalysis {
 
                     LexicalItem item = new LexicalItem(2, temp);
                     ret.addLast(item);
+                    i--;
                 } else if (isDelimiter(line.charAt(i))) {      //界符
                     LexicalItem item = new LexicalItem(5, String.valueOf(line.charAt(i)));
-                    i++;
+                    ret.addLast(item);
                 } else if (isOperators(line.charAt(i))) {      //运算符
                     LexicalItem item;
                     if ((line.charAt(i) == '>' || line.charAt(i) == '<') && line.charAt(i+1) == '=') {
@@ -93,6 +96,7 @@ public class LexicalAnalysis {
                     temp =  line.substring(begin, end);
                     LexicalItem item = new LexicalItem(6, temp);
                     ret.addLast(item);
+                    i--;
                 }
                 else{
                     // 其他

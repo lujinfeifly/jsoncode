@@ -43,12 +43,12 @@ public class UnitCalc {
 
     }
 
-    public static String doProcedure(String json,String func, List<LexicalItem> param) {
+    public static String doProcedure(String func, List<LexicalItem> param) {
         if(func.equals("count")) {
             if(param.size() != 1) {
                 throw new RuntimeException();
             }
-            return String.valueOf(JsonCode.getValueList(json, param.get(0).cm).length);
+            return String.valueOf(JsonCode.getValueList(param.get(0).cm, "$").length);
         } else {
             throw new RuntimeException();
         }

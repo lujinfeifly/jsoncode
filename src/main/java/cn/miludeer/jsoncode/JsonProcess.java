@@ -44,7 +44,7 @@ public class JsonProcess {
                     List<LexicalItem> param = new ArrayList<LexicalItem>();
                     if(item.cm.charAt(0) == ')') {
                         LexicalItem item2 = stack.pop();
-                        if(item.type == 1) {
+                        if(item2.type == 1) {
                             LexicalItem item3 = stack.pop();
                             if(item3.cm.charAt(0) == '(') { // 优先级的括号
                                 param.add(item2);
@@ -61,14 +61,16 @@ public class JsonProcess {
 
                             }
                             LexicalItem item6 = stack.pop();
-                            if(item6 != null && item6.type==3) { // 准备调用函数
-                                String bb = UnitCalc.doProcedure(json, item6.cm, param);
+                            if(item6 != null && item6.type==1) { // 准备调用函数
+                                String bb = UnitCalc.doProcedure(item6.cm, param);
                                 stack.push(new LexicalItem(1, bb));
                             } else {
                                 stack.push(item6);
                                 stack.push(param.get(0));
                             }
                         }
+                    } else {
+                        stack.push(item);
                     }
                     break;
                 case 6:
@@ -82,7 +84,8 @@ public class JsonProcess {
                             String temp = UnitCalc.TwoCompare(item3.cm, value, item2.cm);
                             stack.push(new LexicalItem(1, temp));
                         } else {
-
+                            stack.push(item2);
+                            stack.push(new LexicalItem(1, value));
                         }
                     }
                     break;

@@ -49,7 +49,7 @@ public class JsonCodeTest {
     public void testListRegular() {
         String json = "{\"ss\":{\"sss\":\"vvvvv\",\"fg\":{\"f\":\"ererer\",\"list\":[1,eeee,{\"\\[\"}]}}}";
 
-        String code = JsonCode.calExpressionResult(json,"$.ss.fg.list");
+        String code = JsonCode.calExpressionResult(json,"count($.ss.fg.list)>4");
 
         System.out.println(code);
     }
