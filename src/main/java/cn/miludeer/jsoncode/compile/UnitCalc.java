@@ -16,6 +16,20 @@ public class UnitCalc {
             return String.valueOf(a.equals(b));
         }
 
+        if(v.charAt(0) == '|' || v.charAt(0) == '&') {
+            boolean ba = a.equals("true");
+            boolean bb = b.equals("true");
+
+            switch(v.charAt(0)) {
+                case '|':
+                    return String.valueOf(ba || bb);
+                case '&':
+                    return String.valueOf(ba && bb);
+                default:
+                    return "null";
+            }
+        }
+
         Integer ia = Integer.parseInt(a);
         Integer ib = Integer.parseInt(b);
         switch (v.charAt(0)) {

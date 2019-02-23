@@ -21,7 +21,7 @@ public class Common {
     }
 
     public static boolean isOperators(char ch){// isOperators 运算符
-        if (ch == '+' || ch == '*' || ch == '-' || ch == '/' || ch == '=' || ch == '<' || ch == '>') return true;
+        if (ch == '+' || ch == '*' || ch == '-' || ch == '/' || ch == '=' || ch == '<' || ch == '>' || ch == '|' || ch == '&') return true;
         else return false;
     }
 
