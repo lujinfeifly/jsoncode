@@ -59,6 +59,17 @@ public class JsonCode {
         return cutForList(dis);
     }
 
+    public static String findJson(String jsonStr, String key, String value) {
+        String[] list = getValueList(jsonStr, "$");
+        for(int i = 0;i< list.length; i++) {
+            String fetch = getValue(list[i], "$."+key);
+            if(value.equals(fetch)) {
+                return list[i];
+            }
+        }
+        return null;
+    }
+
 
     /**
      * 计算表达式结果

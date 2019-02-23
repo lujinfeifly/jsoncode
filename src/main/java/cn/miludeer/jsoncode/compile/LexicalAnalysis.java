@@ -17,9 +17,9 @@ public class LexicalAnalysis {
      * @param line
      */
 
-    public static String[] key = {"size"};
+    public static String[] key = {"listsize", "listfind", "listget"};
 
-    public static int keyLen = 1;
+    public static int keyLen = 3;
 
     public static LinkedList<LexicalItem> parse(String line) {
 

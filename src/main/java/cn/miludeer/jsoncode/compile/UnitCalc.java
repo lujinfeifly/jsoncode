@@ -58,11 +58,21 @@ public class UnitCalc {
     }
 
     public static String doProcedure(String func, List<LexicalItem> param) {
-        if(func.equals("count")) {
+        if(func.equals("listsize")) {
             if(param.size() != 1) {
                 throw new RuntimeException();
             }
             return String.valueOf(JsonCode.getValueList(param.get(0).cm, "$").length);
+        } else if(func.equals("listfind")) {
+            if (param.size() != 3) {
+                throw new RuntimeException();
+            }
+            return JsonCode.findJson(param.get(2).cm, param.get(1).cm, param.get(0).cm);
+        } else if(func.equals("listget")) {
+            if(param.size() != 2) {
+                throw new RuntimeException();
+            }
+            return String.valueOf(JsonCode.getValueList(param.get(1).cm, "$")[Integer.parseInt(param.get(0).cm)]);
         } else {
             throw new RuntimeException();
         }

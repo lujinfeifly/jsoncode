@@ -45,6 +45,7 @@ public class JsonProcess {
                             } else if(item3.cm.charAt(0) == ',') {
                                 LexicalItem item4 = stack.pop();
                                 LexicalItem item5 = stack.pop();
+                                param.add(item2);
                                 param.add(item4);
                                 while (item4 != null && (item4.type == 1 || item4.type == 2)
                                         && item5.cm.charAt(0) == ',') {
