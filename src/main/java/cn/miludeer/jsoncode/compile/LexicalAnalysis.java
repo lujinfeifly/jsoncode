@@ -12,15 +12,14 @@ import static cn.miludeer.jsoncode.compile.Common.*;
  **/
 public class LexicalAnalysis {
 
-    /**
-     * 字符常数的码为1，数字常数数为2，保留字为3，运算符为4，界符为5，json路径为6
-     * @param line
-     */
-
     public static String[] key = {"listsize", "listfind", "listget"};
 
     public static int keyLen = 3;
 
+    /**
+     * 字符常数的码为1，数字常数数为2，保留字为3，运算符为4，界符为5，json路径为6
+     * @param line 表达式
+     */
     public static LinkedList<LexicalItem> parse(String line) {
 
         LinkedList<LexicalItem> ret = new LinkedList<LexicalItem>();
