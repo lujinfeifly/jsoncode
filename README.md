@@ -19,6 +19,10 @@ String code = JsonCode.getValue(json,"$.ss.city.name");
 ```
 这个时候code的值就是上海。我们仅通过一条语句就可以实现我们要获取的内容。
 
+## 什么时候不建议用
+
+当json中的所有字段都需要使用的时候，就不建议使用此方式。
+
 
 ## 包的使用（MAVEN）
 ```
