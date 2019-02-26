@@ -32,4 +32,41 @@ String code = JsonCode.getValue(json,"$.ss.city.name");
   <version>1.1</version>
 </dependency>
 ```
+## 全部功能列表
 
+#### 1. 基本值获取
+```
+// 取得json某个值，入参为目标json，路径值（以$开头），返回值为值的String表示
+String code = JsonCode.getValue(json,"$.ss.city.name");
+```
+
+#### 2. 返回列表
+```
+// 取得json某个值代表的list列表，入参为目标json，路径值（以$开头），返回值为值的String数组
+// 如果目标值不是json格式的列表([]包围)，则返回null
+String[] code = JsonCode.getValueList(json,"$.ss.fg.list");
+```
+
+#### 3. 表达式计算
+
+表达式计算为前面的单个值获取的更多的可能方式，我们提供下面这些表达方式这些表达式方法：
+
+值的计算：+ - * /   计算全部已整数表达，不提供小数的方式。
+值的比较：> < =     结果为true或false的字符串表示。 <  > 比较值必须为数字
+布尔运算：& |       运算值必须为布尔的string表示。
+
+几个函数：
+1. listsize(var1)              计算list的大小。
+2. listfind(var1, var2, var3)  查找var1的列表中key为var2时值为var3的json串，若多个取第一个。
+3. listget(var1, var2)         取得list中第var2-1的元素。
+
+举例：
+```
+// json = {"ss":{"sss":"vvvvv","fg":{"f":"ererer","list":[{"dfv":8,"tg":"sfvgbggb"}, {"rrr":3}]}}}
+用以下表达式计算：
+String ret = JsonCode.calExpressionResult(json,"listsize($.ss.fg.list) + 9");
+
+// listsize($.ss.fg.list) + 9           结果为： 11
+// listget($.ss.fg.list , 1)            结果为： {"rrr":3}
+// listfind($.ss.fg.list , dfv, 3).tg   结果为： sfvgbggb
+```

@@ -81,7 +81,7 @@ public class LexicalAnalysis {
                         item = new LexicalItem(4, line.substring(i, i+1));
                     }
                     ret.addLast(item);
-                } else if(line.charAt(i) == '$') { // json
+                } else if(line.charAt(i) == '$') {  // json
                     begin = i;
                     i++;
                     while (i < len && (isDigit(line.charAt(i))
@@ -94,8 +94,18 @@ public class LexicalAnalysis {
                     LexicalItem item = new LexicalItem(6, temp);
                     ret.addLast(item);
                     i--;
-                }
-                else{
+                } else if(isDot(line.charAt(i))) {  //  这个是一个.开始的字符串，目前dot全部用为是计算json路径式子
+                    begin = i;
+                    i++;
+                    while(i < len && (isLetter(line.charAt(i)) || isDot(line.charAt(i)))) {
+                        i++;
+                    }
+                    end = i;
+                    temp = line.substring(begin, end);
+                    LexicalItem item = new LexicalItem(7, temp);
+                    ret.addLast(item);
+                    i--;
+                } else{
                     // 其他
                 }
             }

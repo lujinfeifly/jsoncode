@@ -20,7 +20,7 @@ public class JsonProcess {
 
     public static String calExpression(String json, String expression) {
         LinkedList<LexicalItem> list = LexicalAnalysis.parse(expression);
-        // todo 依次处理元素 字符常数的码为1，数字常数数为2，保留字为3，运算符为4，界符为5，json路径为6
+        // todo 依次处理元素 字符常数的码为1，数字常数数为2，保留字为3，运算符为4，界符为5，json路径为6, json 不带$的为7
 
         Stack<LexicalItem> stack = new Stack<LexicalItem>();
 
@@ -91,6 +91,17 @@ public class JsonProcess {
                             stack.push(new LexicalItem(1, th.cm));
                         }
                     }
+                    break;
+                case 7:  // 这个是计算前面表达式的值的内容，取stack中的数。
+                    LexicalItem itemFore = stack.pop();
+                    if(itemFore == null) {
+                        throw new RuntimeException(); // 内容为空
+                    }
+                    if(itemFore.type != 1) {
+                        throw new RuntimeException(); // 内容不对
+                    }
+                    String calcRes = JsonCode.getValue(itemFore.cm, "$" + item.cm);
+                    stack.push(new LexicalItem(1, calcRes));
                     break;
             }
         }
