@@ -176,7 +176,7 @@ public class JsonProcess {
     }
 
     public static IndexResult anylise(String jsonStr, int beginId, int endId, String key){
-        if(jsonStr.charAt(beginId) != '{') {
+        if(jsonStr.charAt(beginId) != '{') {   // todo json解析里面目前没有考虑空格的兼容处理
             return null;
         }
 

@@ -34,6 +34,9 @@ public class JsonCode {
         int b = jsonStr.length();
         for(int i=1; i<count; i++) {
             IndexResult result = anylise(jsonStr, a,b,list[i]);
+            if(result == null) {
+                return null;
+            }
             a = result.a;
             b = result.b;
             if(a == -1) {
