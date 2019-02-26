@@ -53,8 +53,10 @@ String[] code = JsonCode.getValueList(json,"$.ss.fg.list");
 
 
 >值的计算：+ - * /   计算全部已整数表达，不提供小数的方式。
-值的比较：> < =     结果为true或false的字符串表示。 <  > 比较值必须为数字
-布尔运算：& |       运算值必须为布尔的string表示。
+
+>值的比较：> < =     结果为true或false的字符串表示。 <  > 比较值必须为数字
+
+>布尔运算：& |       运算值必须为布尔的string表示。
 
 几个函数：
 1. listsize(var1)              计算list的大小。
