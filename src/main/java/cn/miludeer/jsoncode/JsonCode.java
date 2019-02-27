@@ -62,6 +62,13 @@ public class JsonCode {
         return cutForList(dis);
     }
 
+    /**
+     * list查找某个key为value的json 元素。条件是jsonStr为list结构，每个元素为正常的json
+     * @param jsonStr 目标json字符串
+     * @param key json中的key值
+     * @param value 对应的value对照值
+     * @return 返回满足条件的json字符串
+     */
     public static String findJson(String jsonStr, String key, String value) {
         String[] list = getValueList(jsonStr, "$");
         for(int i = 0;i< list.length; i++) {

@@ -1,5 +1,6 @@
 package cn.miludeer.jsoncode;
 
+import cn.miludeer.jsoncode.compile.Common;
 import cn.miludeer.jsoncode.compile.LexicalAnalysis;
 import cn.miludeer.jsoncode.compile.LexicalItem;
 import cn.miludeer.jsoncode.compile.UnitCalc;
@@ -18,7 +19,7 @@ import java.util.Stack;
  **/
 public class JsonProcess {
 
-    public static String calExpression(String json, String expression) {
+    protected static String calExpression(String json, String expression) {
         LinkedList<LexicalItem> list = LexicalAnalysis.parse(expression);
         // todo 依次处理元素 字符常数的码为1，数字常数数为2，保留字为3，运算符为4，界符为5，json路径为6, json 不带$的为7
 
@@ -114,7 +115,7 @@ public class JsonProcess {
         }
     }
 
-    public static String[] cutForList(String json) {
+    protected static String[] cutForList(String json) {
         List<String> list = new ArrayList<String>();
 
         int i = 1;
@@ -175,8 +176,12 @@ public class JsonProcess {
         return ret;
     }
 
-    public static IndexResult anylise(String jsonStr, int beginId, int endId, String key){
-        if(jsonStr.charAt(beginId) != '{') {   // todo json解析里面目前没有考虑空格的兼容处理
+    protected static IndexResult anylise(String jsonStr, int beginId, int endId, String key){
+        while(Common.isBlank(jsonStr.charAt(beginId))) {
+            beginId++;
+        }
+
+        if(jsonStr.charAt(beginId) != '{' || beginId >= endId) {   // 如果第一个值不为{ 代表不是json，如果超过了，则数值有问题
             return null;
         }
 
@@ -224,7 +229,7 @@ public class JsonProcess {
                 if(j == key.length() && jsonStr.charAt(i) == '"') { // 匹配上
                     isMatch = true;
                     continue;
-                } else { // 没有匹配上
+                } else { // 没有匹配上,则继续往下走
 
                 }
             }

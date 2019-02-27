@@ -16,7 +16,7 @@ public class JsonCodeTest {
     @Test
     public void testkey() {
 
-        String json = "{\"ss\":{\"sss\":\"vvvvv\",\"fg\":{\"f\":\"ererer\",\"list\":[1,eeee,{\"\\[\"}]}}}";
+        String json = "{\"ss\" : { \"sss\":\"vvvvv\",\"fg\":{\"f\":\"ererer\",\"list\":[1,eeee,{\"\\[\"}]}}}";
 
         String code = JsonCode.getValue(json,"$.ss.fg.f");
 
