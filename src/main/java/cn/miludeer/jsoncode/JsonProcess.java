@@ -367,6 +367,7 @@ public class JsonProcess {
                                     case ',':
                                         if (floor == 0) { // 这里就结束了，返回
                                             result.b = i;
+                                            i--;
                                             break cycle;
                                         }
                                 }

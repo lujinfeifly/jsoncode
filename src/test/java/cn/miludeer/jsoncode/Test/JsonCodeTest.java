@@ -24,6 +24,16 @@ public class JsonCodeTest {
     }
 
     @Test
+    public void testkey2() {
+
+        String json = "{\"json\":{\"a\":{\"www\":\"ff\",\"rrr\":[\"v1\",\"v2\"]},\"b\":{\"www\":\"4567ttt\",\"rrr\": [\"v1\", \"v2\"]}}}";
+
+        String code = JsonCode.getValue(json,"$.json.b.rrr");
+
+        System.out.println(code);
+    }
+
+    @Test
     public void testList() {
 
         String json = "{\"ss\":{\"sss\":\"vvvvv\",\"fg\":{\"f\":\"ererer\",\"list\":[1,eeee,{\"\\[\"}]}}}";
@@ -89,5 +99,7 @@ public class JsonCodeTest {
 
         System.out.println(code);
     }
+
+
 
 }
