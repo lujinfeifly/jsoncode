@@ -5,11 +5,13 @@ import cn.miludeer.jsoncode.compile.LexicalAnalysis;
 import cn.miludeer.jsoncode.compile.LexicalItem;
 import cn.miludeer.jsoncode.compile.UnitCalc;
 import cn.miludeer.jsoncode.element.IndexResult;
+import cn.miludeer.jsoncode.exception.JsonCodeException;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * program: jsoncode
@@ -193,7 +195,7 @@ public class JsonProcess {
         boolean enterKey = true;
         boolean isMatch = false;
 
-        for(int i=beginId + 1; i<endId; i++) {
+        for(int i = beginId + 1; i<endId; i++) {
 
             char temp = jsonStr.charAt(i);
 
@@ -203,140 +205,184 @@ public class JsonProcess {
                 case '\\':
                     isfake = true;
                     continue;
-                case ':':
-                    enterKey = false;
-                    continue;
                 case ',':
                     enterKey = true;
                     continue;
             }
 
             if(enterKey) {  // 如果是key，则进行匹配
-                if(temp == '"') {
+                String thisKey;
+                int begin = beginId;
+                while(Common.isBlank(temp)) { // 去除空格
                     i++;
                     temp = jsonStr.charAt(i);
                 }
-                int j = 0;
-                int keyLen = key.length();
-                while(j<keyLen && temp == key.charAt(j)) {
-                    j++;
-                    i++;
-                    temp = jsonStr.charAt(i);
-                    if(temp == '"' || temp == ':') {
-                        break;
-                    }
-                }
-                if(j == key.length() && jsonStr.charAt(i) == '"') { // 匹配上
-                    isMatch = true;
-                    continue;
-                } else { // 没有匹配上,则继续往下走
 
+                if(Common.isDigit(temp)) {  // 如果是数字
+                    begin = i;
+                    while(Common.isDigit(temp)) {
+                        i++;
+                        temp = jsonStr.charAt(i);
+                    }
+                    thisKey = jsonStr.substring(begin, i);
+                } else {                    // 如果是字符串
+                    if(temp != '"') {
+                        throw new JsonCodeException(1001);
+                    }
+                    i++;
+                    temp = jsonStr.charAt(i);
+                    begin = i;
+                    char fore = ' ';
+                    while(temp != '"' && fore != '\\') {
+                        i++;
+                        fore = temp;
+                        temp = jsonStr.charAt(i);
+                    }
+                    thisKey = jsonStr.substring(begin, i);
+                    i++;
+                }
+                temp = jsonStr.charAt(i);
+                while(Common.isBlank(temp)) { // 去除空格
+                    i++;
+                    temp = jsonStr.charAt(i);
+                }
+
+                if(temp != ':') {
+                    throw new JsonCodeException(1001);
+                } else { // key已经成立
+                    if(thisKey.equals(key)) {
+                        isMatch = true;
+                    } else {
+                        isMatch = false;
+                    }
+                    enterKey = false;
+                    continue;
                 }
             }
 
-            if(!enterKey && isMatch) {   // 到了value，且是内容，且是匹配上的
-                if (temp == '"') { // 值是string
+            if(!enterKey) {
+                while (Common.isBlank(temp)) { // 去除空格
                     i++;
-                    result.a = i;
                     temp = jsonStr.charAt(i);
-                    while (temp != '"') {
+                }
+
+                    if (temp == '"') { // 值是string
                         i++;
+                        result.a = i;
                         temp = jsonStr.charAt(i);
-                        if (temp == '\\') {
-                            i += 2;
+                        while (temp != '"') {
+                            i++;
+                            temp = jsonStr.charAt(i);
+                            if (temp == '\\') {
+                                i += 2;
+                                temp = jsonStr.charAt(i);
+                            }
+                        }
+                        result.b = i;
+                        if(isMatch) {
+                            return result;
+                        } else {
+                            continue;
+                        }
+                    } else if (temp == '[') {  // 数组的方式。
+                        result.a = i;
+                        i++;
+                        boolean isCintent2 = false;
+                        temp = jsonStr.charAt(i);
+                        int floor = 0;
+                        floor++;
+                        cycle2:
+                        while (true) {
+                            if (isCintent2) {
+                                switch (temp) {
+                                    case '\\':
+                                        i++;
+                                        break;
+                                    case '"':
+                                        isCintent2 = false;
+                                        break;
+                                }
+                            } else {
+                                switch (temp) {
+                                    case '[':
+                                        floor++;
+                                        break;
+                                    case ']':
+                                        floor--;
+                                        if (floor == 0) {
+                                            result.b = i + 1;
+                                            break cycle2;
+                                        }
+                                        break;
+                                    case '"':
+                                        isCintent2 = !isCintent2;
+                                        break;
+                                    case '\\':
+                                        i++; // 跳过下一个
+                                        break;
+                                }
+                            }
+                            i++;
                             temp = jsonStr.charAt(i);
                         }
-                    }
-                    result.b = i;
-                    return result;
-                } else if(temp == '[') {  // 数组的方式。
-                    result.a = i;
-                    i++;
-                    boolean isCintent2 = false;
-                    temp = jsonStr.charAt(i);
-                    int floor = 0;
-                    floor++;
-                    cycle2:             while(true) {
-                        if(isCintent2) {
-                            switch (temp) {
-                                case '\\':
-                                    i++;
-                                    break;
-                                case '"':
-                                    isCintent2 = false;
-                                    break;
-                            }
+                        if(isMatch) {
+                            return result;
                         } else {
-                            switch (temp) {
-                                case '[':
-                                    floor ++;
-                                    break;
-                                case ']':
-                                    floor--;
-                                    if(floor == 0) {
-                                        result.b = i+1;
-                                        break cycle2;
-                                    }
-                                    break;
-                                case '"':
-                                    isCintent2 = !isCintent2;
-                                    break;
-                                case '\\':
-                                    i++; // 跳过下一个
-                                    break;
-                            }
+                            continue;
                         }
-                        i++;
-                        temp = jsonStr.charAt(i);
-                    }
-                    return result;
-                } else{  // 值里面可能是int或还是一个json
-                    result.a = i;
-                    int floor = 0;
-                    boolean isCintent2 = false;
-                    cycle:              while(true) {
-                        if (isCintent2) {
-                            switch (temp) {
-                                case '\\':
-                                    i++; // 跳过下一个
-                                    break;
-                                case '"':
-                                    isCintent2 = false;
-                                    break;
+                    } else {  // 值里面可能是int或还是一个json
+                        result.a = i;
+                        int floor = 0;
+                        boolean isCintent2 = false;
+                        cycle:
+                        while (true) {
+                            if (isCintent2) {
+                                switch (temp) {
+                                    case '\\':
+                                        i++; // 跳过下一个
+                                        break;
+                                    case '"':
+                                        isCintent2 = false;
+                                        break;
+                                }
+                            } else {
+                                switch (temp) {
+                                    case '\\':
+                                        i++; // 跳过下一个
+                                        break;
+                                    case '"':
+                                        isCintent2 = !isCintent2;
+                                        break;
+                                    case '{':
+                                        floor++;
+                                        break;
+                                    case '}':
+                                        if (floor == 0) {
+                                            result.b = i;
+                                            break cycle;
+                                        } else {
+                                            floor--;
+                                        }
+                                        break;
+                                    case ',':
+                                        if (floor == 0) { // 这里就结束了，返回
+                                            result.b = i;
+                                            break cycle;
+                                        }
+                                }
                             }
+                            i++;
+                            temp = jsonStr.charAt(i);
+                        }
+                        if(isMatch) {
+                            return result;
                         } else {
-                            switch (temp) {
-                                case '\\':
-                                    i++; // 跳过下一个
-                                    break;
-                                case '"':
-                                    isCintent2 = !isCintent2;
-                                    break;
-                                case '{':
-                                    floor++;
-                                    break;
-                                case '}':
-                                    if(floor == 0) {
-                                        result.b = i;
-                                        break cycle;
-                                    } else {
-                                        floor--;
-                                    }
-                                    break;
-                                case ',':
-                                    if (floor == 0) { // 这里就结束了，返回
-                                        result.b = i;
-                                        break cycle;
-                                    }
-                            }
+                            continue;
                         }
-                        i++;
-                        temp = jsonStr.charAt(i);
                     }
-                    return result;
-                }
             }
         }
+        result.a = -1;
         return result;
     }
 
