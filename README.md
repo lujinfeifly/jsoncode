@@ -29,7 +29,7 @@ String code = JsonCode.getValue(json,"$.ss.city.name");
 <dependency>
   <groupId>cn.miludeer</groupId>
   <artifactId>jsoncode</artifactId>
-  <version>1.1</version>
+  <version>1.2</version>
 </dependency>
 ```
 ## 全部功能列表
