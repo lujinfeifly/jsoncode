@@ -58,7 +58,16 @@ public class JsonCodeTest {
     public void testListRegular2() {
         String json = "{\"ss\":{\"sss\":\"vvvvv\",\"fg\":{\"f\":\"ererer\",\"list\":[1,eeee,{\"\\[\"}]}}}";
 
-        String code = JsonCode.calExpressionResult(json,"listsize($.ss.fg.list) + 9");
+        String code = JsonCode.calExpressionResult(json,"(listsize($.ss.fg.list))");
+
+        System.out.println(code);
+    }
+
+    @Test
+    public void testListRegular21() {
+        String json = "{\"ss\":{\"sss\":\"vvvvv\",\"fg\":{\"f\":\"ererer\",\"list\":[1,eeee,{\"\\[\"}]}}}";
+
+        String code = JsonCode.calExpressionResult(json,"listsize($.ss.fg.list) + listsize($.ss.fg.list)");
 
         System.out.println(code);
     }

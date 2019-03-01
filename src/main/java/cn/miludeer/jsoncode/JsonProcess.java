@@ -58,13 +58,17 @@ public class JsonProcess {
                                 }
 
                             }
-                            LexicalItem item6 = stack.pop();
-                            if(item6 != null && item6.type==1) { // 准备调用函数
-                                String bb = UnitCalc.doProcedure(item6.cm, param);
-                                stack.push(new LexicalItem(1, bb));
+                            if(!stack.isEmpty()) {
+                                LexicalItem item6 = stack.pop();
+                                if (item6 != null && item6.type == 1) { // 准备调用函数
+                                    String bb = UnitCalc.doProcedure(item6.cm, param);
+                                    stack.push(new LexicalItem(1, bb));
+                                } else {
+                                    stack.push(item6);
+                                    stack.push(param.get(0));
+                                }
                             } else {
-                                stack.push(item6);
-                                stack.push(param.get(0));
+                                stack.push(item2);
                             }
                         }
                     } else {
@@ -74,6 +78,11 @@ public class JsonProcess {
                 case 1:
                 case 2:
                 case 6:
+                    if(item.type == 1 && "(".equals(list.get(i+1).cm)) { // 成立标示是个函数
+                        stack.push(item);
+                        continue;
+                    }
+
                     LexicalItem th;
                     if(item.type == 6) {
                         String value = JsonCode.getValue(json, item.cm);
