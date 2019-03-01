@@ -26,9 +26,9 @@ public class JsonCodeTest {
     @Test
     public void testkey2() {
 
-        String json = "{\"json\":{\"a\":{\"www\":\"ff\",\"rrr\":[\"v1\",\"v2\"]},\"b\":{\"www\":\"4567ttt\",\"rrr\": [\"v1\", \"v2\"]}}}";
+        String json = "{\"json\":{\"a\":{\"www\":\"ff\",\"rrr\":[\"v1\",\"v2\"]},\"b\":{\"www\":\"4567ttt\",\"rrr\": [\"v1\", \"v2\"]},\"vv\":5678}}";
 
-        String code = JsonCode.getValue(json,"$.json.b.rrr");
+        String code = JsonCode.getValue(json,"$.json.b");
 
         System.out.println(code);
     }
