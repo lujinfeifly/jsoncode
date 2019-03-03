@@ -77,7 +77,7 @@ public class JsonCodeTest {
     public void testListRegular21() {
         String json = "{\"ss\":{\"sss\":\"vvvvv\",\"fg\":{\"f\":\"ererer\",\"list\":[1,eeee,{\"\\[\"}]}}}";
 
-        String code = JsonCode.calExpressionResult(json,"listsize($.ss.fg.list) + listsize($.ss.fg.list)");
+        String code = JsonCode.calExpressionResult(json,"(listsize($.ss.fg.list) + listsize($.ss.fg.list)) * (1+listsize($.ss.fg.list)) + listsize($.ss.fg.list) = 28");
 
         System.out.println(code);
     }
@@ -102,9 +102,9 @@ public class JsonCodeTest {
 
     @Test
     public void testListRegular7() {
-        String json = "{\"ss\":{\"sss\":\"vvvvv\",\"fg\":{\"f\":\"ererer\",\"list\":[{\"dfv\":8,\"tg\":\"sfvgbggb\"},{\"rrr\":3}]}}}";
+        String json = "{\"ss\":{\"sss\":\"vvvvv\",\"fg\":{\"f\":\"ererer\",\"list\":[{\"dfv\":8,\"tg\":\"sfvgbggb\"},{\"rrr\":7}]}}}";
 
-        String code = JsonCode.calExpressionResult(json,"listfind($.ss.fg.list , rrr, 3).rrr");
+        String code = JsonCode.calExpressionResult(json,"listfind($.ss.fg.list , rrr, 7).rrr");
 
         System.out.println(code);
     }

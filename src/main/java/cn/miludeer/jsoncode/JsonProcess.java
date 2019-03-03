@@ -27,6 +27,8 @@ public class JsonProcess {
 
         Stack<LexicalItem> stack = new Stack<LexicalItem>();
 
+        boolean isAddprocess = false;
+
         int size = list.size();
         for(int i= 0 ; i< size; i++) {
             LexicalItem item = list.get(i);
@@ -63,9 +65,11 @@ public class JsonProcess {
                                 if (item6 != null && item6.type == 1) { // 准备调用函数
                                     String bb = UnitCalc.doProcedure(item6.cm, param);
                                     stack.push(new LexicalItem(1, bb));
+                                    isAddprocess = true;
                                 } else {
                                     stack.push(item6);
                                     stack.push(param.get(0));
+                                    isAddprocess = true;
                                 }
                             } else {
                                 stack.push(item2);
@@ -87,6 +91,7 @@ public class JsonProcess {
                     if(item.type == 6) {
                         String value = JsonCode.getValue(json, item.cm);
                         th = new LexicalItem(1, value);
+                        isAddprocess = true;
                     } else {
                         th = item;
                     }
@@ -98,9 +103,11 @@ public class JsonProcess {
                             LexicalItem item3 = stack.pop();
                             String temp = UnitCalc.TwoCompare(item3.cm, th.cm, item2.cm);
                             stack.push(new LexicalItem(1, temp));
+                            isAddprocess = true;
                         } else {
                             stack.push(item2);
                             stack.push(new LexicalItem(1, th.cm));
+                            isAddprocess = true;
                         }
                     }
                     break;
@@ -114,9 +121,43 @@ public class JsonProcess {
                     }
                     String calcRes = JsonCode.getValue(itemFore.cm, "$" + item.cm);
                     stack.push(new LexicalItem(1, calcRes));
+                    isAddprocess = true;
                     break;
             }
+
             // 这里处理逻辑
+            while(isAddprocess) {
+                if(!stack.isEmpty()) {
+                    LexicalItem itemclear1 = stack.pop();
+                    if (itemclear1.type == 1) {
+                        if (!stack.isEmpty()) {
+                            LexicalItem itemclear2 = stack.pop();
+                            if (itemclear2.type == 4) {
+                                LexicalItem itemclear3 = stack.pop();
+                                String temp = UnitCalc.TwoCompare(itemclear3.cm, itemclear1.cm, itemclear2.cm);
+                                stack.push(new LexicalItem(1, temp));
+                                isAddprocess = true;
+                            } else {
+                                stack.push(itemclear2);
+                                stack.push(itemclear1);
+                                isAddprocess = false;
+                                break;
+                            }
+                        } else {
+                            stack.push(itemclear1);
+                            isAddprocess = false;
+                            break;
+                        }
+                    } else {
+                        stack.push(itemclear1);
+                        isAddprocess = false;
+                        break;
+                    }
+                } else {
+                    break;
+                }
+            }
+
         }
 
         LexicalItem item2 = stack.pop();
