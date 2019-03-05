@@ -161,16 +161,16 @@ public class JsonProcess {
         }
 
         if(stack.isEmpty()) {
-            throw new JsonCodeException(200004, "expression error, not a right value.");
+            throw new JsonCodeException(20001);
         }
 
         LexicalItem item2 = stack.pop();
         if(!stack.isEmpty()) {
-            throw new JsonCodeException(200002, "expression error, cal result failed.");  // 没有答案，stack中还有值
+            throw new JsonCodeException(20002);  // 没有答案，stack中还有值
         }
         if(item2 != null) {
             if(item2.type != 1) {
-                throw new JsonCodeException(200003, "expression error, cannot cal last result.");   // 答案不是一个值，而是一个表示符号错误。
+                throw new JsonCodeException(20003);   // 答案不是一个值，而是一个表示符号错误。
             }
             return item2.cm;
         }else {
@@ -288,7 +288,7 @@ public class JsonProcess {
                         thisKey = jsonStr.substring(begin, i);
                     } else {                    // 如果是字符串
                         if (temp != '"') {
-                            throw new JsonCodeException(100001, "key is must a long or a String with double comma");
+                            throw new JsonCodeException(10001);
                         }
                         i++;
                         temp = jsonStr.charAt(i);
@@ -309,7 +309,7 @@ public class JsonProcess {
                     }
 
                     if (temp != ':') {
-                        throw new JsonCodeException(100001, "the end of the key must has the ':' and with the value.");
+                        throw new JsonCodeException(10002);
                     } else { // key已经成立
                         if (thisKey.equals(key)) {
                             isMatch = true;
@@ -446,7 +446,7 @@ public class JsonProcess {
             }
 
         } catch (StringIndexOutOfBoundsException ex) {
-            throw new JsonCodeException(100004, "the json String perhaps is a half.");
+            throw new JsonCodeException(10003);
         }
         result.a = -1;
         return result;
