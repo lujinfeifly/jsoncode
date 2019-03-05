@@ -17,9 +17,9 @@ public class JsonExceptionTest {
     public void testkey() {
 
         try {
-            String json = "{3:5}";
+            String json = "{3:5,\"0\":890}";
 
-            String code = JsonCode.getValue(json, "$.1.fg.2");
+            String code = JsonCode.getValue(json, "$.0");
 
             System.out.println(code);
         }catch(JsonCodeException ex) {
