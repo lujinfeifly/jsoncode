@@ -160,8 +160,18 @@ public class JsonProcess {
 
         }
 
+        if(stack.isEmpty()) {
+            throw new JsonCodeException(200004, "expression error, not a right value.");
+        }
+
         LexicalItem item2 = stack.pop();
+        if(!stack.isEmpty()) {
+            throw new JsonCodeException(200002, "expression error, cal result failed.");  // 没有答案，stack中还有值
+        }
         if(item2 != null) {
+            if(item2.type != 1) {
+                throw new JsonCodeException(200003, "expression error, cannot cal last result.");   // 答案不是一个值，而是一个表示符号错误。
+            }
             return item2.cm;
         }else {
             return "null";
@@ -229,93 +239,93 @@ public class JsonProcess {
         return ret;
     }
 
-    protected static IndexResult anylise(String jsonStr, int beginId, int endId, String key){
-        while(Common.isBlank(jsonStr.charAt(beginId))) {
-            beginId++;
-        }
-
-        if(jsonStr.charAt(beginId) != '{' || beginId >= endId) {   // 如果第一个值不为{ 代表不是json，如果超过了，则数值有问题
-            return null;
-        }
-
+    protected static IndexResult anylise(String jsonStr, int beginId, int endId, String key) {
         IndexResult result = new IndexResult();
         result.a = -1;
-
-        boolean isContent = false;
-        boolean isfake = false;
-        boolean enterKey = true;
-        boolean isMatch = false;
-
-        for(int i = beginId + 1; i<endId; i++) {
-
-            char temp = jsonStr.charAt(i);
-
-            if(isfake) continue;        // 遇到转义的直接跳过去
-
-            switch (temp) {
-                case '\\':
-                    isfake = true;
-                    continue;
-                case ',':
-                    enterKey = true;
-                    continue;
+        try {
+            while (Common.isBlank(jsonStr.charAt(beginId))) {
+                beginId++;
             }
 
-            if(enterKey) {  // 如果是key，则进行匹配
-                String thisKey;
-                int begin = beginId;
-                while(Common.isBlank(temp)) { // 去除空格
-                    i++;
-                    temp = jsonStr.charAt(i);
+            if (jsonStr.charAt(beginId) != '{' || beginId >= endId) {   // 如果第一个值不为{ 代表不是json，如果超过了，则数值有问题
+                return null;
+            }
+
+            boolean isContent = false;
+            boolean isfake = false;
+            boolean enterKey = true;
+            boolean isMatch = false;
+
+            for (int i = beginId + 1; i < endId; i++) {
+
+                char temp = jsonStr.charAt(i);
+
+                if (isfake) continue;        // 遇到转义的直接跳过去
+
+                switch (temp) {
+                    case '\\':
+                        isfake = true;
+                        continue;
+                    case ',':
+                        enterKey = true;
+                        continue;
                 }
 
-                if(Common.isDigit(temp)) {  // 如果是数字
-                    begin = i;
-                    while(Common.isDigit(temp)) {
+                if (enterKey) {  // 如果是key，则进行匹配
+                    String thisKey;
+                    int begin = beginId;
+                    while (Common.isBlank(temp)) { // 去除空格
                         i++;
                         temp = jsonStr.charAt(i);
                     }
-                    thisKey = jsonStr.substring(begin, i);
-                } else {                    // 如果是字符串
-                    if(temp != '"') {
-                        throw new JsonCodeException(1001);
-                    }
-                    i++;
-                    temp = jsonStr.charAt(i);
-                    begin = i;
-                    char fore = ' ';
-                    while(temp != '"' && fore != '\\') {
+
+                    if (Common.isDigit(temp)) {  // 如果是数字
+                        begin = i;
+                        while (Common.isDigit(temp)) {
+                            i++;
+                            temp = jsonStr.charAt(i);
+                        }
+                        thisKey = jsonStr.substring(begin, i);
+                    } else {                    // 如果是字符串
+                        if (temp != '"') {
+                            throw new JsonCodeException(100001, "key is must a long or a String with double comma");
+                        }
                         i++;
-                        fore = temp;
+                        temp = jsonStr.charAt(i);
+                        begin = i;
+                        char fore = ' ';
+                        while (temp != '"' && fore != '\\') {
+                            i++;
+                            fore = temp;
+                            temp = jsonStr.charAt(i);
+                        }
+                        thisKey = jsonStr.substring(begin, i);
+                        i++;
+                    }
+                    temp = jsonStr.charAt(i);
+                    while (Common.isBlank(temp)) { // 去除空格
+                        i++;
                         temp = jsonStr.charAt(i);
                     }
-                    thisKey = jsonStr.substring(begin, i);
-                    i++;
-                }
-                temp = jsonStr.charAt(i);
-                while(Common.isBlank(temp)) { // 去除空格
-                    i++;
-                    temp = jsonStr.charAt(i);
-                }
 
-                if(temp != ':') {
-                    throw new JsonCodeException(1001);
-                } else { // key已经成立
-                    if(thisKey.equals(key)) {
-                        isMatch = true;
-                    } else {
-                        isMatch = false;
+                    if (temp != ':') {
+                        throw new JsonCodeException(100001, "the end of the key must has the ':' and with the value.");
+                    } else { // key已经成立
+                        if (thisKey.equals(key)) {
+                            isMatch = true;
+                        } else {
+                            isMatch = false;
+                        }
+                        enterKey = false;
+                        continue;
                     }
-                    enterKey = false;
-                    continue;
                 }
-            }
 
-            if(!enterKey) {
-                while (Common.isBlank(temp)) { // 去除空格
-                    i++;
-                    temp = jsonStr.charAt(i);
-                }
+                if (!enterKey) {
+                    while (Common.isBlank(temp)) { // 去除空格
+                        i++;
+                        temp = jsonStr.charAt(i);
+                    }
 
                     if (temp == '"') { // 值是string
                         i++;
@@ -330,7 +340,7 @@ public class JsonProcess {
                             }
                         }
                         result.b = i;
-                        if(isMatch) {
+                        if (isMatch) {
                             return result;
                         } else {
                             continue;
@@ -376,7 +386,7 @@ public class JsonProcess {
                             i++;
                             temp = jsonStr.charAt(i);
                         }
-                        if(isMatch) {
+                        if (isMatch) {
                             return result;
                         } else {
                             continue;
@@ -426,17 +436,19 @@ public class JsonProcess {
                             i++;
                             temp = jsonStr.charAt(i);
                         }
-                        if(isMatch) {
+                        if (isMatch) {
                             return result;
                         } else {
                             continue;
                         }
                     }
+                }
             }
+
+        } catch (StringIndexOutOfBoundsException ex) {
+            throw new JsonCodeException(100004, "the json String perhaps is a half.");
         }
         result.a = -1;
         return result;
     }
-
-
 }

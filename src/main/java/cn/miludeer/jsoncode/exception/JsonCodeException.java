@@ -8,7 +8,7 @@ package cn.miludeer.jsoncode.exception;
  **/
 public class JsonCodeException extends RuntimeException{
 
-//    public static int
+//    public static int  10000   20000 规则表达式有错误
 
     private int code;
     private String msg;
@@ -20,5 +20,13 @@ public class JsonCodeException extends RuntimeException{
     public JsonCodeException(int code, String msg) {
         this.code = code;
         this.msg = msg;
+    }
+
+    @Override
+    public String toString() {
+        return "JsonCodeException{" +
+                "code=" + code +
+                ", msg='" + msg + '\'' +
+                '}';
     }
 }

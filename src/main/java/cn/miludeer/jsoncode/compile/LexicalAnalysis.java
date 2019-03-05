@@ -1,5 +1,7 @@
 package cn.miludeer.jsoncode.compile;
 
+import cn.miludeer.jsoncode.exception.JsonCodeException;
+
 import java.util.LinkedList;
 
 import static cn.miludeer.jsoncode.compile.Common.*;
@@ -73,7 +75,7 @@ public class LexicalAnalysis {
                     ret.addLast(item);
                 } else if (isOperators(line.charAt(i))) {      //运算符
                     LexicalItem item;
-                    if ((line.charAt(i) == '>' || line.charAt(i) == '<') && line.charAt(i+1) == '=') {
+                    if ((line.charAt(i) == '>' || line.charAt(i) == '<' || line.charAt(i) == '=') && line.charAt(i+1) == '=') {
                         item = new LexicalItem(4, line.substring(i, i+2));
                         i += 1;
                     }
