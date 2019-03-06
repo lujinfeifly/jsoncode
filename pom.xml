@@ -42,8 +42,6 @@
         <url>https://github.com/lujinfeifly/jsoncode</url>
     </scm>
 
-
-
     <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
