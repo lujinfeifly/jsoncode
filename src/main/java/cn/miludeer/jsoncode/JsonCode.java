@@ -1,6 +1,7 @@
 package cn.miludeer.jsoncode;
 
 import cn.miludeer.jsoncode.element.IndexResult;
+import cn.miludeer.jsoncode.util.StringSplit;
 
 import static cn.miludeer.jsoncode.JsonProcess.*;
 
@@ -24,7 +25,7 @@ public class JsonCode {
             return null;
         }
 
-        String[] list = expression.split("\\.");
+        String[] list = StringSplit.SplitWithDotsInkey(expression);
         if(!list[0].equals("$")) {
             return null;
         }

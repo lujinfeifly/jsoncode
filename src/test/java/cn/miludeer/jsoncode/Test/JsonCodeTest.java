@@ -24,6 +24,16 @@ public class JsonCodeTest {
     }
 
     @Test
+    public void testkeyrr() {
+
+        String json = "{1 : {123 :\"vvvvv\",   \"f.g\"     : { \"2.i\" :\"ererer\",\"list\":[1,eeee,{\"\\[\"}]}}}";
+
+        String code = JsonCode.getValue(json,"$.1.\"f.g\".\"2.i\"");
+
+        System.out.println(code);
+    }
+
+    @Test
     public void testkey2() {
 
         String json = "{\"json\":{\"a\":{\"www\":\"ff\",\"rrr\":[\"v1\",\"v2\"]},\"b\":{\"www\":\"4567ttt\",\"rrr\": [\"v1\", \"v2\"]},\"vv\":5678}}";
