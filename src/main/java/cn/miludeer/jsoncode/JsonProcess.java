@@ -11,11 +11,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * program: jsoncode
- * description: ${description}
+ * description: 实际的处理逻辑和一些关键的单元逻辑
  * author: lujinfei
  * create: 2019-02-20 13:14
  **/
