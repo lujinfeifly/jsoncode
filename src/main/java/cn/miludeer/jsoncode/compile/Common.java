@@ -8,7 +8,7 @@ package cn.miludeer.jsoncode.compile;
  **/
 public class Common {
     public static boolean isLetter(char ch){   //isLetter 标识符
-        if ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z')) return true;
+        if ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || ch == '\\') return true;
         else return false;
     }
 
