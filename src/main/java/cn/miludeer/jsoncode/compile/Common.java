@@ -36,4 +36,9 @@ public class Common {
         if(ch == '.') return true;
         else return false;
     }
+
+    public static boolean isDoubleQu(char ch) {
+        if(ch == '"') return true;
+        return false;
+    }
 }

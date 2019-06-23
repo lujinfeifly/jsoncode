@@ -1,7 +1,11 @@
 package cn.miludeer.jsoncode.Test;
 
 import cn.miludeer.jsoncode.JsonCode;
+import cn.miludeer.jsoncode.compile.LexicalAnalysis;
+import cn.miludeer.jsoncode.compile.LexicalItem;
 import org.junit.Test;
+
+import java.util.LinkedList;
 
 /**
  * program: jsoncode
@@ -120,5 +124,27 @@ public class JsonCodeTest {
     }
 
 
+    @Test
+    public void testListRegular7extend() {
+        String json = "{\"s.s\":{\"sss\":\"vvvvv\",\"fg\":{\"f\":\"ererer\",\"list\":[{\"dfv\":8,\"tg\":\"sfvgbggb\"},{\"rr.r\":7}]}}}";
+
+        String code = JsonCode.calExpressionResult(json,"listfind($.\"s.s\".fg.list , \"rr.r\", 7).\"rr.r\"");
+
+        System.out.println(code);
+    }
+
+
+
+
+
+
+
+
+
+    @Test
+    public void testDCCC() {
+        LinkedList<LexicalItem> ret = LexicalAnalysis.parse("listfind($.\"s.s\".fg.list , \"rr.r\", 7).\"rr.r\"");
+        System.out.println(ret);
+    }
 
 }

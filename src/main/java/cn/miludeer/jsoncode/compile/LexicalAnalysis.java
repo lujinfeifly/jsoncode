@@ -33,8 +33,7 @@ public class LexicalAnalysis {
             if (isBlank(line.charAt(i))){
                 continue;
             } else {
-                if (isLetter(line.charAt(i)))      //是否为字母
-                {
+                if (isLetter(line.charAt(i)) || isDoubleQu(line.charAt(i)))  {    //是否为字母
                     begin = i;
                     do {
                         i++;
@@ -88,7 +87,8 @@ public class LexicalAnalysis {
                     i++;
                     while (i < len && (isDigit(line.charAt(i))
                             || isLetter(line.charAt(i))
-                            || line.charAt(i) == '.')) {
+                            || line.charAt(i) == '.')
+                            || isDoubleQu(line.charAt(i))) {
                         i++;
                     }
                     end = i;
@@ -99,9 +99,17 @@ public class LexicalAnalysis {
                 } else if(isDot(line.charAt(i))) {  //  这个是一个.开始的字符串，目前dot全部用为是计算json路径式子
                     begin = i;
                     i++;
-                    while(i < len && (isLetter(line.charAt(i)) || isDot(line.charAt(i)))) {
-                        i++;
+
+
+                    while (i < len && (isLetter(line.charAt(i)) || isDot(line.charAt(i)) || isDoubleQu(line.charAt(i)))) {
+                        if(isDoubleQu(line.charAt(i))) {
+                            i++;
+                            while(i< len && !isDoubleQu(line.charAt(i))) {
+                                i++;
+                            }
+                        }
                     }
+
                     end = i;
                     temp = line.substring(begin, end);
                     LexicalItem item = new LexicalItem(7, temp);
