@@ -1,7 +1,12 @@
 package cn.miludeer.jsoncode.Test;
 
 import cn.miludeer.jsoncode.JsonCode;
+import cn.miludeer.jsoncode.Util;
+import cn.miludeer.jsoncode.compile.LexicalAnalysis;
+import cn.miludeer.jsoncode.compile.LexicalItem;
 import org.junit.Test;
+
+import java.util.LinkedList;
 
 /**
  * program: jsoncode
@@ -19,6 +24,16 @@ public class JsonCodeTest {
         String json = "{1 : {123 :\"vvvvv\",   \"fg\"     : { \"2\" :\"ererer\",\"list\":[1,eeee,{\"\\[\"}]}}}";
 
         String code = JsonCode.getValue(json,"$.1.fg.2");
+
+        System.out.println(code);
+    }
+
+    @Test
+    public void testkeyExt() {
+
+        String json = "{1 : {123 :\"vvvvv\",   \"fg.y\"     : { \"2.t\" :\"ererer\",\"list\":[1,eeee,{\"\\[\"}]}}}";
+
+        String code = JsonCode.getValue(json,"$.1.fg\\.y.2\\.t");
 
         System.out.println(code);
     }
@@ -109,6 +124,24 @@ public class JsonCodeTest {
         System.out.println(code);
     }
 
+    @Test
+    public void testListRegular7ext() {
+        String json = "{\"ss\":{\"sss\":\"vvvvv\",\"fg\":{\"f\":\"ererer\",\"list.y\":[{\"dfv\":8,\"tg\":\"sfvgbggb\"},{\"rr.r\":7}]}}}";
 
+        String code = JsonCode.calExpressionResult(json,"listfind($.ss.fg.list\\.y , rr\\.r, 7)");
+
+        System.out.println(code);
+    }
+
+
+
+    @Test
+    public void testddd() {
+        String[] ret = Util.splitWithCompase("$.ss\\.fg.list");
+        System.out.println(ret);
+
+        LinkedList<LexicalItem>  ret2 = LexicalAnalysis.parse("listfind($.ss.fg.list\\.y , rr\\.r, 7)");
+        System.out.println(ret2);
+    }
 
 }

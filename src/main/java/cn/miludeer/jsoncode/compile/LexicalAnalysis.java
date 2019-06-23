@@ -33,12 +33,11 @@ public class LexicalAnalysis {
             if (isBlank(line.charAt(i))){
                 continue;
             } else {
-                if (isLetter(line.charAt(i)))      //是否为字母
-                {
+                if (isLetter(line.charAt(i)))   {    //是否为字母
                     begin = i;
                     do {
                         i++;
-                    } while (i<len && (isDigit(line.charAt(i)) || isLetter(line.charAt(i))));   //常数||标识符
+                    } while (i<len && (isDigit(line.charAt(i)) || isLetter(line.charAt(i)) || line.charAt(i) == '.'));   //常数||标识符
                     end = i;
 
                     temp = line.substring(begin, end);

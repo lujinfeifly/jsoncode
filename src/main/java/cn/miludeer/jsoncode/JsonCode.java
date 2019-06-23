@@ -24,7 +24,7 @@ public class JsonCode {
             return null;
         }
 
-        String[] list = expression.split("\\.");
+        String[] list = Util.splitWithCompase(expression);//expression.split("\\.");
         if(!list[0].equals("$")) {
             return null;
         }
