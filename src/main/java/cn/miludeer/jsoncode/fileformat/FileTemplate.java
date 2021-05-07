@@ -68,18 +68,39 @@ public class FileTemplate {
             switch (line.type) {
                 case 10:  // 循环开始
                     if(!isback) {
-                        String[] temp = JsonCode.getValueList(jsonString, line.words.get(1).content);
-                        stack.push(new StackItem(temp));
+                        String path = line.words.get(1).content.trim();
+                        if(path.startsWith("$")) {
+                            String[] temp = JsonCode.getValueList(jsonString, path);
+                            stack.push(new StackItem(temp, n));
+                        }
+                        if(path.startsWith("@")) {
+                            String[] temp = JsonCode.getValueList(loopTemp,
+                                    path.replace('@','$'));
+                            stack.push(new StackItem(temp, n));
+                        }
                     }
                     StackItem item = stack.peek();
                     loopTemp = item.getNext();
                     loopBegin = n;
                     continue;
                 case 11:  // 循环结束
-                    if(END.equals(loopTemp)) { // 结束
-                        stack.pop();
+                    if(END.equals(loopTemp)) {   // 结束
+                        stack.pop();            // 退出一层
+//                        isback = false;
+
+                        if(!stack.empty()) {
+                            StackItem itemEnd = stack.peek();
+                            if (itemEnd != null) {
+//                                n = itemEnd.beginLoop - 1;
+                                loopTemp = itemEnd.getNow();
+                            } else {
+                                loopTemp = null;
+                            }
+                        }
                     } else {                               // 没有结束，跳转到下一个
-                        n = loopBegin - 1;
+                        StackItem itemEnd = stack.peek();
+                        n = itemEnd.beginLoop - 1;
+//                        n = loopBegin - 1;
                         isback = true;
                     }
                     continue;
@@ -118,21 +139,32 @@ public class FileTemplate {
 
     public static class StackItem {
         List<String> list;
+        int beginLoop;
         int index;
 
-        public StackItem(List<String> list) {
+        public StackItem(List<String> list, int beginLoop) {
             this.list = list;
             this.index = -1;
+            this.beginLoop = beginLoop;
         }
 
-        public StackItem(String[] list) {
+        public StackItem(String[] list, int beginLoop) {
             this.list = Arrays.asList(list);
             this.index = -1;
+            this.beginLoop = beginLoop;
         }
 
         public String getNext() {
             int size = (list == null)?0:list.size();
             this.index ++ ;
+            if(this.index > size - 1) {
+                return END;
+            }
+            return list.get(this.index);
+        }
+
+        public String getNow() {
+            int size = (list == null)?0:list.size();
             if(this.index > size - 1) {
                 return END;
             }
