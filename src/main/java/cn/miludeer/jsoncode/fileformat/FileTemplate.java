@@ -16,11 +16,13 @@ import cn.miludeer.jsoncode.JsonCode;
  * Created on 2021-05-07
  */
 public class FileTemplate {
-    private List<Line>  templates;
+
+    private static final String END = "ERROR_END_END";
+
+    private final List<Line>  templates;
 
 
     public FileTemplate(File file) throws Exception {
-        StringBuilder result = new StringBuilder();
         templates = new ArrayList<Line>();
         try{
             BufferedReader br = new BufferedReader(
@@ -74,7 +76,7 @@ public class FileTemplate {
                     loopBegin = n;
                     continue;
                 case 11:  // 循环结束
-                    if("ERROR_END_END".equals(loopTemp)) { // 结束
+                    if(END.equals(loopTemp)) { // 结束
                         stack.pop();
                     } else {                               // 没有结束，跳转到下一个
                         n = loopBegin - 1;
@@ -83,7 +85,7 @@ public class FileTemplate {
                     continue;
                 default: // 非循环等段落式的内容
                 {
-                    if("ERROR_END_END".equals(loopTemp)) {
+                    if(END.equals(loopTemp)) {
                         continue;
                     }
                     for(Word word: line.words) {
@@ -132,7 +134,7 @@ public class FileTemplate {
             int size = (list == null)?0:list.size();
             this.index ++ ;
             if(this.index > size - 1) {
-                return "ERROR_END_END";
+                return END;
             }
             return list.get(this.index);
         }
@@ -218,27 +220,5 @@ public class FileTemplate {
             this.content = content;
             this.type = type;
         }
-    }
-
-
-    public static void main(String[] args) {
-        try {
-            Line line = new Line(1, "adddd {$.fggg} dsfvg {vvtgg()}sfvbgrbbtt  ");
-            Line line2 = new Line(1, " for {$.fggg} ");
-            Line line3 = new Line(1, "end ");
-
-            String value = "{\"abc\": [{\"v\": 123}, {\"v\": \"iop\"}]}";
-
-            File file = new File("/Users/lujinfei/data/et.ff");
-            FileTemplate template = new FileTemplate(file);
-
-            String ret = template.parseResult(value);
-
-            System.out.println("aaaaa: " + ret);
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-
-
     }
 }
