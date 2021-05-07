@@ -41,10 +41,10 @@ public class FileTemplate {
 
         int loop = 0;
         for(Line line: templates) {
-            if(line.index == 10) {
+            if(line.type == 10) {
                 loop ++;
             }
-            if(line.index == 11) {
+            if(line.type == 11) {
                 loop --;
             }
         }
@@ -60,14 +60,14 @@ public class FileTemplate {
         int size = templates.size();
 
         String loopTemp = null;
-        Integer loopBegin = null;
-        boolean isback = false;
+        Boolean isback = null;
+//        boolean isNewIn = true;
         Stack<StackItem> stack = new Stack<StackItem>();
         for(; n < size; n++) {
             Line line = templates.get(n);
             switch (line.type) {
                 case 10:  // 循环开始
-                    if(!isback) {
+                    if(isback == null || !isback) {
                         String path = line.words.get(1).content.trim();
                         if(path.startsWith("$")) {
                             String[] temp = JsonCode.getValueList(jsonString, path);
@@ -81,12 +81,12 @@ public class FileTemplate {
                     }
                     StackItem item = stack.peek();
                     loopTemp = item.getNext();
-                    loopBegin = n;
+                    if(isback != null && isback) isback = null;
+//                    isback = false;
                     continue;
                 case 11:  // 循环结束
                     if(END.equals(loopTemp)) {   // 结束
                         stack.pop();            // 退出一层
-//                        isback = false;
 
                         if(!stack.empty()) {
                             StackItem itemEnd = stack.peek();
@@ -100,7 +100,6 @@ public class FileTemplate {
                     } else {                               // 没有结束，跳转到下一个
                         StackItem itemEnd = stack.peek();
                         n = itemEnd.beginLoop - 1;
-//                        n = loopBegin - 1;
                         isback = true;
                     }
                     continue;
