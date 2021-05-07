@@ -8,7 +8,7 @@ import cn.miludeer.jsoncode.fileformat.FileTemplate;
 import cn.miludeer.jsoncode.fileformat.FileTemplate.Line;
 
 /**
- * @author lujinfei <lujinfei@kuaishou.com>
+ * @author lujinfei
  * Created on 2021-05-07
  */
 public class JsonCodeFileTest {
