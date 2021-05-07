@@ -40,13 +40,20 @@ public class FileTemplate {
         }
 
         int loop = 0;
+        Stack<Integer> indexStack = new Stack<Integer>();
+        Integer i = 0;
         for(Line line: templates) {
             if(line.type == 10) {
+                indexStack.push(i);
                 loop ++;
             }
             if(line.type == 11) {
+                Integer index = indexStack.pop();
+                line.jump = index;                 // 跳转的index
+                templates.get(index).jump = i;     // 跳转的index
                 loop --;
             }
+            i++;
         }
         if(loop != 0) {
             throw new Exception();
@@ -60,14 +67,13 @@ public class FileTemplate {
         int size = templates.size();
 
         String loopTemp = null;
-        Boolean isback = null;
-//        boolean isNewIn = true;
+        boolean isback = false;
         Stack<StackItem> stack = new Stack<StackItem>();
         for(; n < size; n++) {
             Line line = templates.get(n);
             switch (line.type) {
                 case 10:  // 循环开始
-                    if(isback == null || !isback) {
+                    if(!isback) {
                         String path = line.words.get(1).content.trim();
                         if(path.startsWith("$")) {
                             String[] temp = JsonCode.getValueList(jsonString, path);
@@ -81,33 +87,20 @@ public class FileTemplate {
                     }
                     StackItem item = stack.peek();
                     loopTemp = item.getNext();
-                    if(isback != null && isback) isback = null;
-//                    isback = false;
-                    continue;
-                case 11:  // 循环结束
-                    if(END.equals(loopTemp)) {   // 结束
-                        stack.pop();            // 退出一层
 
-                        if(!stack.empty()) {
-                            StackItem itemEnd = stack.peek();
-                            if (itemEnd != null) {
-//                                n = itemEnd.beginLoop - 1;
-                                loopTemp = itemEnd.getNow();
-                            } else {
-                                loopTemp = null;
-                            }
-                        }
-                    } else {                               // 没有结束，跳转到下一个
-                        StackItem itemEnd = stack.peek();
-                        n = itemEnd.beginLoop - 1;
-                        isback = true;
+                    if(END.equals(loopTemp)) {
+                        stack.pop();
+                        n = line.jump;
+                    } else {
+                        isback = false;
                     }
+                    continue;
+                case 11:  // end 循环结束 跳转的首 由首决定
+                    n = line.jump - 1;
+                    isback = true;
                     continue;
                 default: // 非循环等段落式的内容
                 {
-                    if(END.equals(loopTemp)) {
-                        continue;
-                    }
                     for(Word word: line.words) {
                         if(word.type == 0) {
                             sb.append(word.content);
@@ -175,7 +168,10 @@ public class FileTemplate {
     public static class Line {
         private int index;
         private int type;         // 行的类型 (10 for 循环)(11 end for)
+        public int jump;
         private List<Word> words;
+
+
 
         public Line(int index, String content) throws Exception {
             this.index = index;
