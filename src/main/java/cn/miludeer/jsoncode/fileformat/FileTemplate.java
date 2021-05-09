@@ -91,9 +91,8 @@ public class FileTemplate {
                     if(END.equals(loopTemp)) {
                         stack.pop();
                         n = line.jump;
-                    } else {
-                        isback = false;
                     }
+                    isback = false;
                     continue;
                 case 11:  // end 循环结束 跳转的首 由首决定
                     n = line.jump - 1;

@@ -28,7 +28,7 @@ public class Common {
     }
 
     public static boolean isBlank(char ch){
-        if (ch == ' ' || ch == '\t') return true;
+        if (ch == ' ' || ch == '\t' || (int)ch == 160) return true;
         else return false;
     }
 
