@@ -3,6 +3,7 @@ package cn.miludeer.jsoncode.fileformat;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,11 +20,24 @@ public class FileTemplate {
 
     private static final String END = "ERROR_END_END";
 
-    private final List<Line>  templates;
+    private final List<Line>  templates = new ArrayList<Line>();;
+
+    public FileTemplate(InputStream inputStream) throws Exception {
+        InputStreamReader isr = new InputStreamReader(inputStream);
+        BufferedReader br = new BufferedReader(isr);
+        int index = 0;
+        String line = "";
+        while ((line = br.readLine()) != null) {
+            index ++ ;  // 每次读取一行
+            templates.add(new Line(index, line));
+        }
+        br.close();
+
+        init();
+    }
 
 
     public FileTemplate(File file) throws Exception {
-        templates = new ArrayList<Line>();
         try{
             BufferedReader br = new BufferedReader(
                     new InputStreamReader(new FileInputStream(file), "UTF-8"));
@@ -39,6 +53,10 @@ public class FileTemplate {
             e.printStackTrace();
         }
 
+        init();
+    }
+
+    private void init() throws Exception {
         int loop = 0;
         Stack<Integer> indexStack = new Stack<Integer>();
         Integer i = 0;
