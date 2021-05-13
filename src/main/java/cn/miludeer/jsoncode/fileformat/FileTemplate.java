@@ -32,6 +32,7 @@ public class FileTemplate {
             templates.add(new Line(index, line));
         }
         br.close();
+        isr.close();
 
         init();
     }
