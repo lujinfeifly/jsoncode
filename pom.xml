@@ -6,7 +6,7 @@
 
     <groupId>cn.miludeer</groupId>
     <artifactId>jsoncode</artifactId>
-    <version>1.2.4</version>
+    <version>1.2.6</version>
 
     <dependencies>
         <dependency>
@@ -81,7 +81,6 @@
                 </executions>
             </plugin>
 
-            <!-- java doc -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
