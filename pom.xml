@@ -6,7 +6,7 @@
 
     <groupId>cn.miludeer</groupId>
     <artifactId>jsoncode</artifactId>
-    <version>1.2.6</version>
+    <version>1.2.7-file</version>
 
     <dependencies>
         <dependency>
@@ -17,7 +17,7 @@
         </dependency>
     </dependencies>
 
-    <description>easy json ramework</description>
+    <description>easy json framework</description>
     <name>jsoncode</name>
     <url>http://miludeer.cn</url>
     <licenses>

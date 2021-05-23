@@ -58,6 +58,9 @@ public class JsonCode {
         if(dis == null || dis.length()<1 || dis.charAt(0) != '[') {
             return null;
         }
+        if("[]".equals(dis)) {
+            return new String[]{};
+        }
 
         return cutForList(dis);
     }
